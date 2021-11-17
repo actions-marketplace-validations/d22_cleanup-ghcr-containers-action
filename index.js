@@ -1,15 +1,54 @@
 const core = require('@actions/core');
-const github = require('@actions/github');
+const { Octokit } = require("@octokit/rest");
+
+const authSecret = core.getInput('auth');
+const packageName = core.getInput('package-name');
+const versionsToKeep = core.getInput('versions-to-keep'); // *1
+
 
 try {
-	// `who-to-greet` input defined in action metadata file
-	const nameToGreet = core.getInput('who-to-greet');
-	console.log(`Hello ${nameToGreet}!`);
-	const time = (new Date()).toTimeString();
-	core.setOutput("time", time);
-	// Get the JSON webhook payload for the event that triggered the workflow
-	const payload = JSON.stringify(github.context.payload, undefined, 2)
-	console.log(`The event payload: ${payload}`);
+	const octokit = new Octokit({
+		auth: authSecret
+	});
+
+	console.log("find versions to delete");
+	const versionsToDelete = findVersionsToDelete(octokit);
+
+	versionsToDelete.then(versions => {
+		console.log('going to delete the follwing versions: ', versions);
+		versions.forEach(version => {
+			deleteOldVersion(version, octokit);
+		});
+	});
 } catch (error) {
 	core.setFailed(error.message);
+}
+
+
+async function findVersionsToDelete(octokit) {
+	let response = await octokit.rest.packages.getAllPackageVersionsForPackageOwnedByAuthenticatedUser({
+			package_type: 'container',
+			package_name: packageName,
+		}
+	);
+	const data = response.data;
+	let versions = new Map();
+	data.forEach(version => {
+		const updated = new Date(version.created_at);
+		versions.set(updated, version.id);
+	});
+	const sortedVersions = [...versions]
+		.sort((o1, o2) => o2[0].getTime() - o1[0].getTime())
+		.map(tuple => tuple[1]);
+	return sortedVersions.splice(versionsToKeep);
+}
+
+
+async function deleteOldVersion(version, octokit) {
+	console.log("... deleting version ", version);
+	await octokit.rest.packages.deletePackageVersionForAuthenticatedUser({
+		package_type: 'container',
+		package_name: packageName,
+		package_version_id: version
+	});
 }

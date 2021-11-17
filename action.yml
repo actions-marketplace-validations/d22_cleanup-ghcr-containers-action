@@ -1,13 +1,19 @@
-name: 'Hello World'
-description: 'Greet someone and record the time'
+name: 'Cleanup ghcr container versions'
+description: 'Keeps only the latest version of a container package on Github Container Registry (ghcr.io)'
+branding:
+  icon: 'x'
+  color: 'gray-dark'
 inputs:
-  who-to-greet:  # id of input
-    description: 'Who to greet'
+  auth:
+    description: 'Auth token'
     required: true
-    default: 'World'
-outputs:
-  time: # id of output
-    description: 'The time we greeted you'
+  package-name: 
+    description: 'Name of the package to clean up'
+    required: true
+  versions-to-keep:
+    description: 'How many versions should be kept, decending by creation date'
+    required: false
+    default: 1
 runs:
   using: 'node12'
   main: 'index.js'

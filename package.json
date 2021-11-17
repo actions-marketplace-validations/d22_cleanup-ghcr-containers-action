@@ -1,11 +1,8 @@
 {
   "name": "cleanup-ghcr-containers-action",
-  "version": "1.0.0",
-  "description": "",
+  "version": "0.3.0",
+  "description": "Keeps only the latest version of a container package on Github Container Registry (ghcr.io)",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/d22/cleanup-ghcr-containers-action.git"
@@ -19,6 +16,6 @@
   "homepage": "https://github.com/d22/cleanup-ghcr-containers-action#readme",
   "dependencies": {
     "@actions/core": "^1.6.0",
-    "@actions/github": "^5.0.0"
+    "@octokit/rest": "^18.12.0"
   }
 }

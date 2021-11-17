@@ -1,21 +1,29 @@
 # Cleanup GHCR Containers Action
+This action deletes old versions of containers on Github container registry (ghcr.io). 
+By default only the latest version.
 
-This action prints "Hello World" or "Hello" + the name of a person to greet to the log.
+This action works only with containers, no other package formats.
 
 ## Inputs
-
-## `who-to-greet`
-
-**Required** The name of the person to greet. Default `"World"`.
-
-## Outputs
-
-## `time`
-
-The time we greeted you.
-
+### `access-token`
+**Required** Access token with packages read- and write-permisson.
+### `package-name`
+**Required** Name of the package to work with
+    required: true
+### `versions-to-keep`
+How many versions should be left untouched. Default is '1', only the latest.
 ## Example usage
+### Keep only the latest version:
 
-	uses: actionshello-world-javascript-action@v0.1
+	uses: d22/cleanup-ghcr-containers-action@v0.3.0
 	with:
-	  who-to-greet: 'Mona the Octocat'
+      auth: ${{ secrets.GITHUB_TOKEN }}
+      package-name: 'master-tool-dev'
+
+### Keep the latest and the two following versions:
+
+	uses: d22/cleanup-ghcr-containers-action@v0.3.0
+	with:
+      auth: ${{ secrets.MY_PAT }}
+      package-name: 'master-tool-dev'
+      versions-to-keep: 3 
