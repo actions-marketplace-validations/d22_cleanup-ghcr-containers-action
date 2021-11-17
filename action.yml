@@ -10,6 +10,9 @@ inputs:
   package-name: 
     description: 'Name of the package to clean up'
     required: true
+  username:
+    description: 'Username'
+    required: true  
   versions-to-keep:
     description: 'How many versions should be kept, decending by creation date'
     required: false
