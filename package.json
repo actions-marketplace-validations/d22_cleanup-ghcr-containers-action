@@ -7,9 +7,8 @@
     "type": "git",
     "url": "git+https://github.com/d22/cleanup-ghcr-containers-action.git"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Jonas Furrer",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/d22/cleanup-ghcr-containers-action/issues"
   },
