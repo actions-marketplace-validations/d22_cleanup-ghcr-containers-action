@@ -4,8 +4,8 @@ branding:
   icon: 'x'
   color: 'gray-dark'
 inputs:
-  auth:
-    description: 'Auth token'
+  access-token:
+    description: 'Access token'
     required: true
   package-name: 
     description: 'Name of the package to clean up'

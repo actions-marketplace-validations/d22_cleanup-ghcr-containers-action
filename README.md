@@ -17,13 +17,13 @@ How many versions should be left untouched. Default is '1', only the latest.
 
 	uses: d22/cleanup-ghcr-containers-action@v0.3.0
 	with:
-      auth: ${{ secrets.GITHUB_TOKEN }}
+      access-token: ${{ secrets.GITHUB_TOKEN }}
       package-name: 'master-tool-dev'
 
 ### Keep the latest and the two following versions:
 
 	uses: d22/cleanup-ghcr-containers-action@v0.3.0
 	with:
-      auth: ${{ secrets.MY_PAT }}
+      access-token: ${{ secrets.MY_PAT }}
       package-name: 'master-tool-dev'
       versions-to-keep: 3 

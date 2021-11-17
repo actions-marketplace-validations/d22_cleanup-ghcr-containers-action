@@ -1,21 +1,25 @@
 const core = require('@actions/core');
 const { Octokit } = require("@octokit/rest");
 
-const authSecret = core.getInput('auth');
+const accessToken = core.getInput('access-token');
 const packageName = core.getInput('package-name');
 const versionsToKeep = core.getInput('versions-to-keep'); // *1
 
 
 try {
 	const octokit = new Octokit({
-		auth: authSecret
+		auth: accessToken
 	});
 
-	console.log("find versions to delete");
-	const versionsToDelete = findVersionsToDelete(octokit);
+	console.info('package-name:', packageName);
+	console.info('versions-to-keep:', versionsToKeep)
+
+	console.info("find versions to delete");
+	const versionsToDelete = findVersionsToDelete(octokit)
+		.catch(e => console.error(e));
 
 	versionsToDelete.then(versions => {
-		console.log('going to delete the follwing versions: ', versions);
+		console.info('going to delete the follwing versions: ', versions);
 		versions.forEach(version => {
 			deleteOldVersion(version, octokit);
 		});
@@ -27,10 +31,9 @@ try {
 
 async function findVersionsToDelete(octokit) {
 	let response = await octokit.rest.packages.getAllPackageVersionsForPackageOwnedByAuthenticatedUser({
-			package_type: 'container',
-			package_name: packageName,
-		}
-	);
+		package_type: 'container',
+		package_name: packageName,
+	});
 	const data = response.data;
 	let versions = new Map();
 	data.forEach(version => {
